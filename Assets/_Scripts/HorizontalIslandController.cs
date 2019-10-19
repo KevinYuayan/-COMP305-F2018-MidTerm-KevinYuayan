@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Util;
 /// <summary>
 /// File Name: HorizontalIslandController.cs
@@ -17,9 +18,14 @@ public class HorizontalIslandController : MonoBehaviour
 
     public Boundary boundary;
 
+    private bool _isLevel2;
+
     // Start is called before the first frame update
     void Start()
-    {
+    {        
+        // Checks if Level is 2
+        GameObject scoreBoardObj = GameObject.Find("ScoreBoard");
+        _isLevel2 = (SceneManager.GetActiveScene().name == "Level2");
         Reset();
     }
 
@@ -35,11 +41,24 @@ public class HorizontalIslandController : MonoBehaviour
     /// </summary>
     void Move()
     {
-        Vector2 newPosition = new Vector2(horizontalSpeed, 0.0f);
-        Vector2 currentPosition = transform.position;
+        if (_isLevel2)
+        {
+            Vector2 newPosition = new Vector2(horizontalSpeed, 0.0f);
+            Vector2 currentPosition = transform.position;
 
-        currentPosition -= newPosition;
-        transform.position = currentPosition;
+            currentPosition -= newPosition;
+            transform.position = currentPosition;
+        }
+        // Level 3
+        else
+        {
+            Vector2 newPosition = new Vector2(horizontalSpeed, 0.0f);
+            Vector2 currentPosition = transform.position;
+
+            currentPosition += newPosition;
+            transform.position = currentPosition;
+        }
+
     }
 
     /// <summary>
@@ -47,8 +66,17 @@ public class HorizontalIslandController : MonoBehaviour
     /// </summary>
     void Reset()
     {
-        float randomYPosition = Random.Range(boundary.Bottom, boundary.Top);
-        transform.position = new Vector2(boundary.Right, randomYPosition);
+        if (_isLevel2)
+        {
+            float randomYPosition = Random.Range(boundary.Bottom, boundary.Top);
+            transform.position = new Vector2(boundary.Right, randomYPosition);
+        }
+        // Level 3
+        else
+        {
+            float randomYPosition = Random.Range(boundary.Bottom, boundary.Top);
+            transform.position = new Vector2(boundary.Left, randomYPosition);
+        }
     }
 
     /// <summary>
@@ -57,9 +85,20 @@ public class HorizontalIslandController : MonoBehaviour
     /// </summary>
     void CheckBounds()
     {
-        if (transform.position.x <= boundary.Left)
+        if (_isLevel2)
         {
-            Reset();
+            if (transform.position.x <= boundary.Left)
+            {
+                Reset();
+            }
+        }
+        // Level 3
+        else
+        {
+            if (transform.position.x >= boundary.Right)
+            {
+                Reset();
+            }
         }
     }
 }

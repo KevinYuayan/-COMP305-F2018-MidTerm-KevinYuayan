@@ -44,6 +44,7 @@ public class GameController : MonoBehaviour
 
     // Private instance variables
     private int _level2Score = 500;
+    private int _level3Score = 1000;
 
     // public properties
     public int Lives
@@ -92,6 +93,13 @@ public class GameController : MonoBehaviour
                 DontDestroyOnLoad(scoreBoard);
                 SceneManager.LoadScene("Level2");
             }
+
+            // Checks if the player has 1000 points to go to the next level
+            if (_score == _level3Score && SceneManager.GetActiveScene().name != "Level3")
+            {
+                DontDestroyOnLoad(scoreBoard);
+                SceneManager.LoadScene("Level3");
+            }
         }
     }
 
@@ -100,7 +108,6 @@ public class GameController : MonoBehaviour
     {
         GameObjectInitialization();
         SceneConfiguration();
-
     }
 
     // Finds references to the game objects
@@ -130,6 +137,7 @@ public class GameController : MonoBehaviour
                 break;
             case "Main":
             case "Level2":
+            case "Level3":
                 highScoreLabel.enabled = false;
                 startLabel.SetActive(false);
                 startButton.SetActive(false);

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 /// <summary>
 /// File Name: HorizontalOceanController.cs
 /// Author: Kevin Yuayan
@@ -15,11 +16,27 @@ public class HorizontalOceanController : MonoBehaviour
     public float resetPosition;
     public float resetPoint;
 
+    private bool _isLevel2;
+
     // Start is called before the first frame update
     void Start()
     {
-        resetPosition = 18.4f;
-        resetPoint = -10.4f;
+        // Checks if Level is 2
+        GameObject scoreBoardObj = GameObject.Find("ScoreBoard");
+        _isLevel2 = (SceneManager.GetActiveScene().name == "Level2");
+
+        // Level 2
+        if (_isLevel2)
+        {
+            resetPosition = 18.4f;
+            resetPoint = -10.4f;
+        }
+        // Level 3
+        else
+        {
+            resetPosition = -18.4f;
+            resetPoint = 10.4f;
+        }
         //Reset();
     }
 
@@ -35,11 +52,24 @@ public class HorizontalOceanController : MonoBehaviour
     /// </summary>
     void Move()
     {
-        Vector2 newPosition = new Vector2(horizontalSpeed, 0f);
-        Vector2 currentPosition = transform.position;
+        // Level 2
+        if (_isLevel2)
+        {
+            Vector2 newPosition = new Vector2(horizontalSpeed, 0f);
+            Vector2 currentPosition = transform.position;
 
-        currentPosition -= newPosition;
-        transform.position = currentPosition;
+            currentPosition -= newPosition;
+            transform.position = currentPosition;
+        }
+        // Level 3
+        else
+        {
+            Vector2 newPosition = new Vector2(horizontalSpeed, 0f);
+            Vector2 currentPosition = transform.position;
+
+            currentPosition += newPosition;
+            transform.position = currentPosition;
+        }
     }
 
     /// <summary>
@@ -48,6 +78,7 @@ public class HorizontalOceanController : MonoBehaviour
     void Reset()
     {
         transform.position = new Vector2(resetPosition, -0.8f);
+
     }
 
     /// <summary>
@@ -56,9 +87,21 @@ public class HorizontalOceanController : MonoBehaviour
     /// </summary>
     void CheckBounds()
     {
-        if(transform.position.x <= resetPoint)
+        // Level 2
+        if (_isLevel2)
         {
-            Reset();
+            if (transform.position.x <= resetPoint)
+            {
+                Reset();
+            }
+        }
+        // Level 3
+        else
+        {
+            if (transform.position.x >= resetPoint)
+            {
+                Reset();
+            }
         }
     }
 }
