@@ -42,6 +42,9 @@ public class GameController : MonoBehaviour
     public GameObject endLabel;
     public GameObject restartButton;
 
+    // Private instance variables
+    private int _level2Score = 500;
+
     // public properties
     public int Lives
     {
@@ -53,13 +56,13 @@ public class GameController : MonoBehaviour
         set
         {
             _lives = value;
-            if(_lives < 1)
+            if (_lives < 1)
             {
-                
                 SceneManager.LoadScene("End");
             }
             else
             {
+                scoreBoard.GetComponent<ScoreBoard>().lives = _lives;
                 livesLabel.text = "Lives: " + _lives.ToString();
             }
            
@@ -84,7 +87,7 @@ public class GameController : MonoBehaviour
             }
             scoreLabel.text = "Score: " + _score.ToString();
             // Checks if the player has 500 points to go to the next level
-            if (_score == 100 && SceneManager.GetActiveScene().name != "Level2")
+            if (_score == _level2Score && SceneManager.GetActiveScene().name != "Level2")
             {
                 DontDestroyOnLoad(scoreBoard);
                 SceneManager.LoadScene("Level2");
@@ -103,7 +106,7 @@ public class GameController : MonoBehaviour
     // Finds references to the game objects
     private void GameObjectInitialization()
     {
-        scoreBoard = GameObject.Find("HighScore");
+        scoreBoard = GameObject.Find("ScoreBoard");
 
         startLabel = GameObject.Find("StartLabel");
         endLabel = GameObject.Find("EndLabel");
